@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/rmcluster/backend/cmd/linux-client/fscas"
@@ -18,11 +20,41 @@ import (
 // time to wait after failed announcement
 const retrySleep = time.Second
 
+func getDataPath() string {
+	// Check environment variable first
+	if envPath := os.Getenv("RMCLUSTER_CLIENT_DATA_DIR"); envPath != "" {
+		return envPath
+	}
+
+	// Fallback based on OS
+	home, err := os.UserHomeDir()
+	if err != nil {
+		// Cannot determine a sane fallback
+		return ""
+	}
+
+	switch runtime.GOOS {
+	case "windows":
+		// Use %LOCALAPPDATA% on Windows
+		localAppData := os.Getenv("LOCALAPPDATA")
+		if localAppData == "" {
+			localAppData = filepath.Join(home, "AppData", "Local")
+		}
+		return filepath.Join(localAppData, "rmcluster-client")
+	default:
+		// Use XDG_DATA_HOME if present, otherwise ~/.local/share
+		if xdgDataHome := os.Getenv("XDG_DATA_HOME"); xdgDataHome != "" {
+			return filepath.Join(xdgDataHome, "rmcluster-client")
+		}
+		return filepath.Join(home, ".local", "share", "rmcluster-client")
+	}
+}
+
 func main() {
 	id := flag.String("id", "", "the id of the node")
 	tracker := flag.String("tracker", "127.0.0.1:4917", "ip:port of the tracker")
 	rpcPort := flag.Int("port", 1984, "port to run the RPC server on")
-	dataPath := flag.String("data-path", "", "path to the data directory. CAS storage will be placed under 'storage' subdirectory. If empty, CAS is disabled.")
+	dataPath := flag.String("data-path", getDataPath(), "path to the data directory. CAS storage will be placed under 'storage' subdirectory. If empty, CAS is disabled.")
 	casPort := flag.Int("cas-port", 1985, "port to run the CAS server on")
 	rpcCommand := flag.String("cmd", "rpc-server", "command to run the RPC server")
 	flag.Parse()

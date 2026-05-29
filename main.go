@@ -60,7 +60,12 @@ func main() {
 	flag.Parse()
 
 	if *id == "" {
-		log.Fatal("missing id")
+		config, err := LoadOrCreateConfig()
+		if err != nil {
+			log.Fatalf("Failed to load or create config: %v", err)
+		}
+		*id = config.ID
+		log.Printf("Generated new ID: %s", *id)
 	}
 
 	args := []string{

@@ -82,6 +82,7 @@ func main() {
 
 	if *dataPath != "" {
 		// start CAS server
+		log.Printf("Data directory: %s", *dataPath)
 		casStoragePath := *dataPath + "/storage"
 		cas := fscas.NewCAS(casStoragePath)
 		go func() {
@@ -90,6 +91,8 @@ func main() {
 				log.Fatal(err)
 			}
 		}()
+	} else {
+		log.Println("CAS is disabled (no data directory specified)")
 	}
 
 	// start announcement loop

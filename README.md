@@ -4,10 +4,11 @@ This is a simple client that announces itself to the server and runs an RPC serv
 
 ## Usage
 
-The client takes the command name of llama.cpp's rpc server command and the IP of the tracker as arguments.
-The rest of the arguments are passed to the rpc server command.
-Use `--` to separate rpc-server's arguments from the client's arguments.
+You will need to have llama.cpp's rpc-server executable installed.
+
+The following starts the Linux node software and connects it to the backend running on `127.0.0.1:4917`.
+To connect to a different backend instance (ex. running on another computer), specify a different ip/port.
 
 ```bash
-go run ./cmd/linux-client/ -cmd PATH/TO/rpc-server -tracker 127.0.0.1:4917 -- -c
+go run . -tracker 127.0.0.1:4917
 ```

@@ -13,8 +13,8 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/rmcluster/backend/cmd/linux-client/fscas"
-	"github.com/rmcluster/backend/cmd/linux-client/openapi"
+	"github.com/rmcluster/linux-client/fscas"
+	"github.com/rmcluster/linux-client/openapi"
 )
 
 // time to wait after failed announcement

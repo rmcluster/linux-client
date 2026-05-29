@@ -22,7 +22,7 @@ func main() {
 	id := flag.String("id", "", "the id of the node")
 	tracker := flag.String("tracker", "127.0.0.1:4917", "ip:port of the tracker")
 	rpcPort := flag.Int("port", 1984, "port to run the RPC server on")
-	casPath := flag.String("cas-path", "", "path to the CAS directory. If empty, CAS is disabled.")
+	dataPath := flag.String("data-path", "", "path to the data directory. CAS storage will be placed under 'storage' subdirectory. If empty, CAS is disabled.")
 	casPort := flag.Int("cas-port", 1985, "port to run the CAS server on")
 	rpcCommand := flag.String("cmd", "rpc-server", "command to run the RPC server")
 	flag.Parse()
@@ -48,9 +48,10 @@ func main() {
 	// print command
 	log.Printf("Running command: %s %v\n", *rpcCommand, args)
 
-	if *casPath != "" {
+	if *dataPath != "" {
 		// start CAS server
-		cas := fscas.NewCAS(*casPath)
+		casStoragePath := *dataPath + "/storage"
+		cas := fscas.NewCAS(casStoragePath)
 		go func() {
 			log.Printf("Starting CAS server on %s", fmt.Sprintf("0.0.0.0:%d", *casPort))
 			if err := openapi.NewRouter(cas).Run(fmt.Sprintf("0.0.0.0:%d", *casPort)); err != nil {
@@ -66,7 +67,7 @@ func main() {
 		query.Add("id", *id)
 		query.Add("port", fmt.Sprint(*rpcPort))
 
-		if *casPath != "" {
+		if *dataPath != "" {
 			query.Add("storage_port", fmt.Sprint(*casPort))
 		}
 

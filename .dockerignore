@@ -1,0 +1,3 @@
+# minimize build invalidation
+.dockerignore
+Dockerfile

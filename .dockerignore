@@ -1,3 +1,6 @@
 # minimize build invalidation
 .dockerignore
 Dockerfile
+README.md
+compose.yml
+.env

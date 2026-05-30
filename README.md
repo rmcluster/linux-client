@@ -12,3 +12,9 @@ To connect to a different backend instance (ex. running on another computer), sp
 ```bash
 go run . -tracker 127.0.0.1:4917
 ```
+
+## Docker
+
+`compose.yml` provides an easy way to set up a single linux-client node on the device.
+Note that if you are running the backend on the same device, you will need to use the `host.docker.internal` gateway.
+This is configured by default for the compose.

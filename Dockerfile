@@ -26,6 +26,9 @@ FROM docker.io/ubuntu:26.04
 RUN apt-get update && apt-get install -y libgomp1
 COPY --from=llama-cpp-files /llama-b9415 /app
 COPY --from=builder /build/rmd-client /app/rmd-client
+RUN mkdir -p /var/app/data
+VOLUME /var/app/data
+ENV RMCLUSTER_CLIENT_DATA_DIR=/var/app/data
 ENV PATH=/app
 
 # Set entrypoint

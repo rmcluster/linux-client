@@ -8,8 +8,11 @@ services:
       - RMCLUSTER_CLIENT_DATA_DIR=/var/app/data
     volumes:
       - rmd-client-data:/var/app/data
+    ports:
+      - "${RPC_PORT}:${RPC_PORT}"
+      - "${CAS_PORT}:${CAS_PORT}"
     restart: unless-stopped
-    command: ["-tracker", "${TRACKER_IP}"]
+    command: ["-tracker", "${TRACKER_IP}", "-port", "${RPC_PORT}", "-cas-port", "${CAS_PORT}"]
 
 volumes:
   rmd-client-data:

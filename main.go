@@ -57,6 +57,7 @@ func main() {
 	dataPath := flag.String("data-path", getDataPath(), "path to the data directory. CAS storage will be placed under 'storage' subdirectory. If empty, CAS is disabled.")
 	casPort := flag.Int("cas-port", 1985, "port to run the CAS server on")
 	rpcCommand := flag.String("cmd", "rpc-server", "command to run the RPC server")
+	nickname := flag.String("nickname", "", "nickname for the node")
 	flag.Parse()
 
 	if *id == "" {
@@ -109,6 +110,10 @@ func main() {
 
 		if *dataPath != "" {
 			query.Add("storage_port", fmt.Sprint(*casPort))
+		}
+
+		if *nickname != "" {
+			query.Add("nickname", fmt.Sprintf(*nickname))
 		}
 
 		announceUrl := url.URL{

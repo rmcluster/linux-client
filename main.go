@@ -11,6 +11,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"syscall"
 	"time"
 
 	"github.com/rmcluster/linux-client/fscas"
@@ -106,6 +107,7 @@ func main() {
 		query := make(url.Values)
 		query.Add("id", *id)
 		query.Add("port", fmt.Sprint(*rpcPort))
+		query.Add("max_size", fmt.Sprint(getTotalMemoryBytes()))
 
 		if *dataPath != "" {
 			query.Add("storage_port", fmt.Sprint(*casPort))
@@ -148,4 +150,10 @@ func main() {
 
 type announcementResponse struct {
 	Interval float64 `json:"interval"`
+}
+
+func getTotalMemoryBytes() uint64 {
+	var sysinfo syscall.Sysinfo_t
+	syscall.Sysinfo(&sysinfo)
+	return sysinfo.Totalram
 }
